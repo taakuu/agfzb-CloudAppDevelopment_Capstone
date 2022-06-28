@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 #from .models import CarModel
-from .restapis import get_dealers_from_cf, get_dealer_by_id_from_cf, get_dealer_reviews_from_cf, post_request
+from .restapis import get_dealers_from_cf,  get_dealer_reviews_from_cf, post_request #,get_dealer_by_id_from_cf
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -96,10 +96,40 @@ def registration_request(request):
 
 
 # Update the `get_dealerships` view to render the index page with a list of dealerships
+'''
 def get_dealerships(request):
-    context = {}
     if request.method == "GET":
-        return render(request, 'djangoapp/index.html', context)
+        url = "https://4da3c77e.eu-gb.apigw.appdomain.cloud/api/dealership/dealer-get"
+        # Get dealers from the URL
+        dealerships = get_dealers_from_cf(url)
+        # Concat all dealer's short name
+        dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
+        # Return a list of dealer short name
+        return HttpResponse(dealer_names)
+'''
+def get_dealerships(request):
+    if request.method != "GET":
+        return redirect('djangoapp:index')
+
+    context = {}
+    # Get dealers from the URL
+    dealerships = get_dealers_from_cf()
+    context['dealership_list'] = dealerships
+    context['dealership_table'] = {
+        'id': 'ID',
+        'full_name': 'Dealer Name',
+        'city': 'City',
+        'address': 'Address',
+        'zip': 'Zip',
+        'st': 'State',
+    }
+    # Concat all dealer's short name
+    # for dealer in dealerships:
+    #     print(dealer["full_name"])
+    # dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
+
+    return render(request, 'djangoapp/index.html', context)
+
 
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
