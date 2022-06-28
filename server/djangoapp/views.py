@@ -112,8 +112,9 @@ def get_dealerships(request):
         return redirect('djangoapp:index')
 
     context = {}
+    url = "https://4da3c77e.eu-gb.apigw.appdomain.cloud/api/dealership"
     # Get dealers from the URL
-    dealerships = get_dealers_from_cf()
+    dealerships = get_dealers_from_cf(url)
     context['dealership_list'] = dealerships
     context['dealership_table'] = {
         'id': 'ID',
@@ -143,7 +144,7 @@ def get_dealer_details(request, dealer_id):
         context["review_list"] = reviews
 
         dealer_url = "https://4da3c77e.eu-gb.apigw.appdomain.cloud/api/dealership"
-        dealer = get_dealer_by_id_from_cf(dealer_url, id=dealer_id)
+        dealer = get_dealers_from_cf(dealer_url, idealerId=dealer_id)
         context["dealer"] = dealer
      
         return render(request, 'djangoapp/dealer_details.html', context)
