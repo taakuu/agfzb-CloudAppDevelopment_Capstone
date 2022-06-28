@@ -26,20 +26,6 @@ async function main(params) {
 
     const dbName = 'dealerships';
 
-    try {
-        let dbList = await cloudant.getAllDbs();
-        console.log( dbList.result );
-    } catch (error) {
-        console.error(error)
-        return {
-            "statusCode": 500,
-            "body": error.toString()
-        }
-    }
-
-    let status_code = 200;
-    let headers = { 'Content-Type': 'application/json' };
-    let resp = '';
 
     try {
         console.log("try")
@@ -49,7 +35,7 @@ async function main(params) {
 
             // https://cloud.ibm.com/apidocs/cloudant?code=node#postfind
             const selector /*: CloudantV1.JsonObject*/ = {
-                state: {
+                st: {
                     '$eq': params.state
                 }
             };
